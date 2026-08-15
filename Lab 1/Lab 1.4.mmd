@@ -1,0 +1,47 @@
+classDiagram
+    direction TB
+
+    class Person {
+        personID
+        name
+        contact
+        login()
+        updateProfile()
+    }
+
+    class Patient {
+        patientID
+        medicalHistory
+        bookAppointment()
+        viewPrescription()
+    }
+
+    class Doctor {
+        doctorID
+        specialization
+        diagnosePatient()
+        issuePrescription()
+    }
+
+    class Appointment {
+        appointmentID
+        appointmentDate
+        status
+        cancelAppointment()
+    }
+
+    class Prescription {
+        prescriptionID
+        medication
+        dosage
+        generateDetails()
+    }
+
+    Person <|-- Patient
+    Person <|-- Doctor
+
+    Patient "1" --> "*" Appointment : schedules
+    Doctor "1" --> "*" Appointment : attends
+
+    Patient "1" --> "*" Prescription : receives
+    Doctor "1" --> "*" Prescription : issues

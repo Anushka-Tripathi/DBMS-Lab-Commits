@@ -1,0 +1,33 @@
+erDiagram
+    PATIENT ||--o{ APPOINTMENT : "schedules"
+    DOCTOR ||--o{ PRESCRIPTION : "issues"
+    PATIENT }|..|{ DOCTOR : "consults"
+    APPOINTMENT ||--o{ PRESCRIPTION : "generates"
+
+    PATIENT {
+        string patient_id PK
+        string name
+        string contact
+    }
+
+    DOCTOR {
+        string doctor_id PK
+        string name
+        string specialization
+    }
+
+    APPOINTMENT {
+        string appointment_id PK
+        string patient_id FK
+        string doctor_id FK
+        string appointment_date
+        string status
+    }
+
+    PRESCRIPTION {
+        string prescription_id PK
+        string appointment_id FK
+        string doctor_id FK
+        string medication
+        string dosage
+    }

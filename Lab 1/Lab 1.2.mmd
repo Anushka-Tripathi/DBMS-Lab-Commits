@@ -1,0 +1,11 @@
+graph TD
+    A["LIBRARY SYSTEM ROOT"] --> B["STAFF RECORD<br/>Staff_ID (PK)<br/>Name"]
+    B --> C["MEMBER RECORD<br/>Member_ID (PK)<br/>Name"]
+    
+    X["BOOK INVENTORY ROOT"] --> Y["BOOK RECORD<br/>ISBN (PK)<br/>Title"]
+    
+    C --> D["LOAN RECORD<br/>Loan_ID (PK)"]
+    Y --> D
+    
+    C --> E["RESERVATION RECORD<br/>Reservation_ID (PK)"]
+    Y --> E
