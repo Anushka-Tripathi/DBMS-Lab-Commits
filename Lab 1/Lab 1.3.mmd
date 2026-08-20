@@ -1,33 +1,33 @@
 erDiagram
-    PATIENT ||--o{ APPOINTMENT : "schedules"
-    DOCTOR ||--o{ PRESCRIPTION : "issues"
-    PATIENT }|..|{ DOCTOR : "consults"
-    APPOINTMENT ||--o{ PRESCRIPTION : "generates"
+    MEMBER ||--o{ LOAN : "creates"
+    BOOK ||--o{ LOAN : "referenced_in"
+    MEMBER ||--o{ RESERVATION : "creates"
+    BOOK ||--o{ RESERVATION : "associated_with"
 
-    PATIENT {
-        string patient_id PK
-        string name
-        string contact
+    MEMBER {
+        string member_id PK
+        string membership_type
     }
 
-    DOCTOR {
-        string doctor_id PK
-        string name
-        string specialization
+    BOOK {
+        string isbn PK
+        string title
+        string author
+        boolean is_available
     }
 
-    APPOINTMENT {
-        string appointment_id PK
-        string patient_id FK
-        string doctor_id FK
-        string appointment_date
+    LOAN {
+        string loan_id PK
+        string member_id FK
+        string isbn FK
+        date issue_date
+        date due_date
+    }
+
+    RESERVATION {
+        string reservation_id PK
+        string member_id FK
+        string isbn FK
+        date request_date
         string status
-    }
-
-    PRESCRIPTION {
-        string prescription_id PK
-        string appointment_id FK
-        string doctor_id FK
-        string medication
-        string dosage
     }

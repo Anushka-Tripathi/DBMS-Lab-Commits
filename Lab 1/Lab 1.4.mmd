@@ -1,47 +1,55 @@
 classDiagram
     direction TB
 
-    class Person {
-        personID
-        name
-        contact
-        login()
-        updateProfile()
+    class User {
+        +String userID
+        +String name
+        +String email
+        +login()
+        +logout()
     }
 
-    class Patient {
-        patientID
-        medicalHistory
-        bookAppointment()
-        viewPrescription()
+    class Staff {
+        +String staffID
+        +String role
+        +addBook()
+        +manageMember()
     }
 
-    class Doctor {
-        doctorID
-        specialization
-        diagnosePatient()
-        issuePrescription()
+    class Member {
+        +String memberID
+        +String membershipType
+        +requestBook()
+        +reserveBook()
     }
 
-    class Appointment {
-        appointmentID
-        appointmentDate
-        status
-        cancelAppointment()
+    class Book {
+        +String isbn
+        +String title
+        +String author
+        +Boolean isAvailable
+        +checkAvailability()
     }
 
-    class Prescription {
-        prescriptionID
-        medication
-        dosage
-        generateDetails()
+    class Reservation {
+        +String reservationID
+        +Date requestDate
+        +String status
+        +cancelReservation()
     }
 
-    Person <|-- Patient
-    Person <|-- Doctor
+    class Loan {
+        +String loanID
+        +Date issueDate
+        +Date dueDate
+        +calculateFine()
+    }
 
-    Patient "1" --> "*" Appointment : schedules
-    Doctor "1" --> "*" Appointment : attends
+    User <|-- Staff
+    User <|-- Member
 
-    Patient "1" --> "*" Prescription : receives
-    Doctor "1" --> "*" Prescription : issues
+    Member "1" --> "*" Reservation : requests
+    Book "1" --> "*" Reservation : tagged_in
+
+    Member "1" --> "*" Loan : borrows
+    Book "1" --> "*" Loan : linked_to
