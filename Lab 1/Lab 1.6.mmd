@@ -1,0 +1,50 @@
+classDiagram
+    direction TB
+
+    class Staff {
+        +String staffID PK
+        +String name
+        +String email
+    }
+
+    class Librarian {
+        +String shift
+        +processReservation()
+    }
+
+    class Admin {
+        +String accessLevel
+        +manageSystem()
+    }
+
+    class Member {
+        +String memberID PK
+        +String name
+    }
+
+    class Book {
+        +String isbn PK
+        +String title
+    }
+
+    class Reservation {
+        +String reservationID PK
+        +Date requestDate
+        +String status
+    }
+
+    class ReservationApproval {
+        <<Aggregation>>
+        +String approvalID PK
+        +Date approvalDate
+        +String decision
+    }
+
+    Staff <|-- Librarian : Specializes
+    Staff <|-- Admin : Specializes
+
+    Member "1" --> "*" Reservation : requests
+    Book "1" --> "*" Reservation : for
+
+    Reservation o-- ReservationApproval : aggregates
+    Librarian "1" --> "*" ReservationApproval : reviews

@@ -1,0 +1,41 @@
+erDiagram
+    STAFF ||--o{ BOOK : "manages"
+    MEMBER ||--o{ LOAN : "borrows"
+    LOAN }|--|| BOOK : "references"
+    MEMBER ||--o{ RESERVATION : "makes"
+    RESERVATION }|--|| BOOK : "for"
+
+    STAFF {
+        string staff_id PK
+        string name
+        string email
+        string role
+    }
+
+    MEMBER {
+        string member_id PK
+        string name
+        string email
+        string membership_type
+    }
+
+    LOAN {
+        string loan_id PK
+        string member_id FK
+        string isbn FK
+        date issue_date
+    }
+
+    RESERVATION {
+        string reservation_id PK
+        string member_id FK
+        string isbn FK
+        date request_date
+    }
+
+    BOOK {
+        string isbn PK
+        string title
+        string author
+        boolean is_available
+    }
