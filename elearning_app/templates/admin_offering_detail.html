@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ offering.course_code }}{% endblock %}
+{% block content %}
+<p class="crumb"><a href="{{ url_for('admin_offerings') }}">Offerings</a> / {{ offering.course_code }}</p>
+<div class="head">
+  <div>
+    <h1>{{ offering.course_code }} · {{ offering.title }}</h1>
+    <p class="muted">{{ offering.term_name }} · Section {{ offering.section_code }} · Instructor: {{ offering.instructor }}
+      · Weights: assignments {{ offering.assignment_weight|int }}% / quizzes {{ offering.quiz_weight|int }}%</p>
+  </div>
+  {% if offering.is_current %}
+  <form method="post" action="{{ url_for('admin_results', oid=offering.offering_id) }}">
+    <button class="btn primary">Calculate results</button>
+  </form>
+  {% endif %}
+</div>
+
+<div class="card flush">
+<table>
+  <tr><th>Roll no.</th><th>Student</th><th>Enrolled</th><th>Attendance</th><th>Result</th><th>Status</th><th></th></tr>
+  {% for r in roster %}
+  <tr><td>{{ r.roll_number }}</td>
+      <td><a href="{{ url_for('admin_student_detail', sid=r.student_id) }}">{{ r.student }}</a></td>
+      <td>{{ r.enrolled_on }}</td>
+      <td>{% if r.attendance_pct is not none %}<span class="pill {{ 'ok' if r.attendance_pct >= 75 else 'bad' }}">{{ r.attendance_pct }}%</span>{% else %}-{% endif %}</td>
+      <td>{% if r.final_percentage is not none %}{{ r.final_percentage }}% <span class="grade {{ grade_class(r.grade) }}">{{ r.grade }}</span>{% else %}-{% endif %}</td>
+      <td>{{ r.status }}</td>
+      <td>{% if r.status == 'enrolled' %}
+        <form method="post" action="{{ url_for('admin_drop', eid=r.enrollment_id) }}" onsubmit="return confirm('Drop this student from the course?')">
+          <button class="btn small danger">Drop</button></form>{% endif %}</td></tr>
+  {% else %}<tr><td colspan="7" class="empty">Nobody enrolled yet.</td></tr>{% endfor %}
+</table>
+</div>
+
+<h2>Enroll a student</h2>
+<form method="post" action="{{ url_for('admin_enroll', oid=offering.offering_id) }}" class="card form inline">
+  <select name="student_id" required>
+    <option value="">Choose a student…</option>
+    {% for s in available %}<option value="{{ s.student_id }}">{{ s.roll_number }} · {{ s.first_name }} {{ s.last_name }}</option>{% endfor %}
+  </select>
+  <button class="btn primary">Enroll</button>
+</form>
+<p class="hint">Capacity, prerequisites and duplicate enrollments are checked by database triggers, so the message below comes straight from MySQL.</p>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}{{ enr.course_code }}{% endblock %}
+{% block content %}
+<p class="crumb"><a href="{{ url_for('student_dashboard') }}">My courses</a> / {{ enr.course_code }}</p>
+<h1>{{ enr.course_code }} · {{ enr.title }}</h1>
+<p class="muted">{{ enr.term_name }} · Section {{ enr.section_code }} · {{ enr.instructor }} · {{ enr.credits }} credits</p>
+
+<div class="card result">
+  <div class="head">
+    <h2>Your standing</h2>
+    {% if result.final_percentage is not none %}
+      <div class="big"><b>{{ result.final_percentage }}%</b> <span class="grade {{ grade_class(result.grade) }}">{{ result.grade }}</span></div>
+    {% else %}<span class="muted">Not calculated yet</span>{% endif %}
+  </div>
+  <div class="breakdown">
+    <div><span>Assignments ({{ enr.assignment_weight|int }}%)</span><b>{{ (result.assignment_pct ~ '%') if result.assignment_pct is not none else '-' }}</b></div>
+    <div><span>Quizzes ({{ enr.quiz_weight|int }}%)</span><b>{{ (result.quiz_pct ~ '%') if result.quiz_pct is not none else '-' }}</b></div>
+    <div><span>Attendance</span><b>{{ (result.attendance_pct ~ '%') if result.attendance_pct is not none else '-' }}</b></div>
+    <div class="{{ 'neg' if result.deduction and result.deduction > 0 }}"><span>Attendance deduction</span><b>{{ '-' ~ result.deduction|int if result.deduction and result.deduction > 0 else '0' }}</b></div>
+  </div>
+  {% if result.computed_on %}<p class="hint">Last calculated {{ result.computed_on }}. Only assignments past their due date and closed quizzes count.</p>{% endif %}
+</div>
+
+<div class="grid2" style="margin-bottom:18px">
+  <div class="card"><div class="card-title"><h2>Score by component</h2><small>counted so far</small></div>{{ charts.parts }}</div>
+  <div class="card"><div class="card-title"><h2>Attendance</h2><small>this course</small></div>{{ charts.attendance }}</div>
+</div>
+
+<h2>Study material</h2>
+<div class="card">
+  {% for n, m in modules.items() %}
+  <div class="module">
+    <h3>Module {{ n }}: {{ m.title }}</h3>
+    {% if m['items'] %}
+    <ul class="plain">
+      {% for it in m['items'] %}
+      <li><span class="pill">{{ it.material_type }}</span> <a href="{{ it.resource_url }}" target="_blank" rel="noopener">{{ it.title }}</a></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p class="muted">No material uploaded yet.</p>{% endif %}
+  </div>
+  {% else %}<p class="empty">No modules published yet.</p>{% endfor %}
+</div>
+
+<h2>Assignments</h2>
+{% for a in assignments %}
+<div class="card">
+  <div class="head">
+    <h3>{{ a.title }} <small class="muted">· {{ a.max_marks|int }} marks</small></h3>
+    {% if a.submission_id %}
+      {% if a.marks_obtained is not none %}<span class="pill ok">{{ a.marks_obtained }} / {{ a.max_marks|int }}</span>
+      {% else %}<span class="pill warn">submitted, awaiting grade</span>{% endif %}
+    {% elif a.past_due %}<span class="pill bad">overdue</span>
+    {% else %}<span class="pill">pending</span>{% endif %}
+  </div>
+  <p class="muted">{{ a.description }}<br>Due {{ a.due_date }}{% if a.allow_late %} · late submissions allowed{% endif %}</p>
+  {% if a.feedback %}<p><b>Feedback:</b> {{ a.feedback }}</p>{% endif %}
+  {% if not a.submission_id and enr.status == 'enrolled' and (not a.past_due or a.allow_late) %}
+  <form method="post" action="{{ url_for('student_submit', eid=enr.enrollment_id, aid=a.assignment_id) }}" class="inline">
+    <input name="content_url" placeholder="Paste a link to your work (Drive, GitHub…)" required>
+    <button class="btn primary">Submit</button>
+  </form>
+  {% elif a.submission_id %}<p class="muted">Submitted {{ a.submitted_on }}</p>{% endif %}
+</div>
+{% else %}<p class="empty">No assignments yet.</p>{% endfor %}
+
+<h2>Quizzes</h2>
+<div class="card flush">
+<table>
+  <tr><th>Quiz</th><th>Window</th><th>Questions</th><th>Attempts</th><th>Best score</th></tr>
+  {% for q in quizzes %}
+  <tr><td>{{ q.title }}</td><td>{{ q.available_from }} → {{ q.available_until }}</td>
+      <td>{{ q.questions }}</td><td>{{ q.attempts }} / {{ q.max_attempts }}</td>
+      <td>{% if q.best_score is not none %}{{ q.best_score|int }} / {{ q.total_marks|int }}{% else %}-{% endif %}</td></tr>
+  {% else %}<tr><td colspan="5" class="empty">No quizzes yet.</td></tr>{% endfor %}
+</table>
+</div>
+
+<h2>Attendance
+  {% if result.attendance_pct is not none %}<span class="pill {{ 'ok' if result.attendance_pct >= 75 else 'bad' }}">{{ result.attendance_pct }}%</span>{% endif %}</h2>
+<div class="card">
+  <p class="muted">Present {{ att.present }} · Late {{ att.late }} · Absent {{ att.absent }} · Excused {{ att.excused }}</p>
+  <div class="chips">
+    {% for s in sessions %}
+      <span class="chip {{ s.status or 'none' }}" title="{{ s.topic }}">{{ s.session_date.strftime('%d %b') }}</span>
+    {% else %}<span class="empty">No sessions yet.</span>{% endfor %}
+  </div>
+  <p class="legend-row"><span class="chip present">present</span> <span class="chip late">late</span> <span class="chip absent">absent</span> <span class="chip excused">excused</span> <span class="chip none">not marked</span></p>
+</div>
+{% endblock %}

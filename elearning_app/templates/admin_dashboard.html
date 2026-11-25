@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from '_icons.html' import ico %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="hero">
+  <h1>Welcome back, {{ session.user.full_name.split(' ')[0] }}</h1>
+  <p>Here is how the college is doing this term.</p>
+  <div class="chips">
+    <span class="chip2">{{ counts.offerings }} offerings running</span>
+    <span class="chip2">{{ counts.enrollments }} active enrollments</span>
+    <span class="chip2">{{ counts.ungraded }} submissions waiting for a grade</span>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat s1"><div class="ico">{{ ico('users') }}</div><div><b>{{ counts.students }}</b><span>Active students</span></div></div>
+  <div class="stat s2"><div class="ico">{{ ico('briefcase') }}</div><div><b>{{ counts.instructors }}</b><span>Instructors</span></div></div>
+  <div class="stat s4"><div class="ico">{{ ico('book') }}</div><div><b>{{ counts.courses }}</b><span>Catalog courses</span></div></div>
+  <div class="stat s5"><div class="ico">{{ ico('layers') }}</div><div><b>{{ counts.offerings }}</b><span>Offerings this term</span></div></div>
+  <div class="stat s2"><div class="ico">{{ ico('check') }}</div><div><b>{{ counts.enrollments }}</b><span>Active enrollments</span></div></div>
+  <div class="stat s3"><div class="ico">{{ ico('alert') }}</div><div><b>{{ counts.ungraded }}</b><span>Submissions to grade</span></div></div>
+</div>
+
+<div class="grid2">
+  <div class="card"><div class="card-title"><h2>Seats filled per offering</h2><small>this term</small></div>{{ charts.fill }}</div>
+  <div class="card"><div class="card-title"><h2>Average result per course</h2><small>this term</small></div>{{ charts.avg }}</div>
+  <div class="card"><div class="card-title"><h2>Grade distribution</h2><small>all courses this term</small></div>{{ charts.grades }}</div>
+  <div class="card"><div class="card-title"><h2>Attendance health</h2><small>by enrollment</small></div>{{ charts.attendance }}</div>
+</div>
+
+<div class="grid2" style="margin-top:18px">
+  <div class="card flush">
+    <div class="card-title" style="padding:18px 20px 0"><h2>Recent enrollments</h2></div>
+    <table>
+      <tr><th>Student</th><th>Course</th><th>Date</th></tr>
+      {% for r in recent %}
+      <tr><td>{{ r.student }}<br><small class="muted">{{ r.roll_number }}</small></td>
+          <td>{{ r.course_code }}<br><small class="muted">{{ r.title }}</small></td>
+          <td>{{ r.enrolled_on }}</td></tr>
+      {% else %}<tr><td colspan="3" class="empty">No enrollments yet.</td></tr>{% endfor %}
+    </table>
+  </div>
+  <div class="card flush">
+    <div class="card-title" style="padding:18px 20px 0"><h2>Attendance below 75%</h2></div>
+    <table>
+      <tr><th>Student</th><th>Course</th><th>Attendance</th></tr>
+      {% for r in low_attendance %}
+      <tr><td><a href="{{ url_for('admin_student_detail', sid=r.student_id) }}">{{ r.student }}</a><br><small class="muted">{{ r.roll_number }}</small></td>
+          <td>{{ r.course_code }}</td>
+          <td><span class="pill bad">{{ r.pct }}%</span></td></tr>
+      {% else %}<tr><td colspan="3" class="empty">Everyone is above 75%.</td></tr>{% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock %}

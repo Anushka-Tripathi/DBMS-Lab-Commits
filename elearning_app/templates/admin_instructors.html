@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Instructors{% endblock %}
+{% block content %}
+<h1>Instructors</h1>
+<div class="card flush">
+<table>
+  <tr><th>Code</th><th>Name</th><th>Email</th><th>Department</th><th>Designation</th><th>Offerings</th></tr>
+  {% for i in instructors %}
+  <tr><td>{{ i.employee_code }}</td><td>{{ i.first_name }} {{ i.last_name }}</td><td>{{ i.email }}</td>
+      <td>{{ i.department_name }}</td><td>{{ i.designation }}</td><td>{{ i.offerings }}</td></tr>
+  {% endfor %}
+</table>
+</div>
+{% endblock %}

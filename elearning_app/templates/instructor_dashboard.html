@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from '_icons.html' import ico %}
+{% block title %}My courses{% endblock %}
+{% block content %}
+{% set total_students = offerings|sum(attribute='students') %}
+{% set total_grade = offerings|sum(attribute='to_grade') %}
+<div class="hero">
+  <h1>Hello, {{ session.user.full_name.split(' ')[0] }}</h1>
+  <p>Your teaching overview.</p>
+  <div class="chips">
+    <span class="chip2">{{ offerings|length }} course(s)</span>
+    <span class="chip2">{{ total_students }} students</span>
+    <span class="chip2">{{ total_grade }} submissions to grade</span>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card"><div class="card-title"><h2>Average result per course</h2><small>this term</small></div>{{ charts.avg }}</div>
+  <div class="card"><div class="card-title"><h2>Grading queue</h2><small>all your courses</small></div>{{ charts.queue }}</div>
+</div>
+
+<h2>My courses</h2>
+<div class="cards">
+  {% for o in offerings %}
+  <a class="card course g{{ loop.index0 % 6 }}" href="{{ url_for('instructor_offering', oid=o.offering_id) }}">
+    <div class="course-top">
+      <div><div class="code">{{ o.course_code }} · {{ o.term_name }}</div><h3>{{ o.title }}</h3></div>
+      {% if o.is_current %}<span class="grade">current</span>{% endif %}
+    </div>
+    <div class="course-body">
+      <p class="muted" style="margin:0">Section {{ o.section_code }} · {{ o.role }}</p>
+      <div class="meta">
+        <span><b>{{ o.students }}</b> students</span>
+        <span>{% if o.to_grade %}<span class="pill warn">{{ o.to_grade }} to grade</span>{% else %}<span class="pill ok">all graded</span>{% endif %}</span>
+      </div>
+    </div>
+  </a>
+  {% else %}<p class="empty">You are not assigned to any course yet.</p>{% endfor %}
+</div>
+{% endblock %}

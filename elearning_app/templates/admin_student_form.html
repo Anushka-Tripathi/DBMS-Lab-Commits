@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Add student{% endblock %}
+{% block content %}
+<h1>Add student</h1>
+<form method="post" class="card form">
+  <div class="row">
+    <label>Roll number <input name="roll_number" required value="{{ form.roll_number }}"></label>
+    <label>Program
+      <select name="program_id" required>
+        {% for p in programs %}<option value="{{ p.program_id }}" {{ 'selected' if form.program_id == p.program_id|string }}>{{ p.program_name }}</option>{% endfor %}
+      </select>
+    </label>
+  </div>
+  <div class="row">
+    <label>First name <input name="first_name" required value="{{ form.first_name }}"></label>
+    <label>Last name <input name="last_name" required value="{{ form.last_name }}"></label>
+  </div>
+  <div class="row">
+    <label>Email <input type="email" name="email" required value="{{ form.email }}"></label>
+    <label>Phone <input name="phone" value="{{ form.phone }}"></label>
+  </div>
+  <div class="row">
+    <label>Date of birth <input type="date" name="date_of_birth" value="{{ form.date_of_birth }}"></label>
+    <label>Admission year <input type="number" name="admission_year" min="2000" max="2100" required value="{{ form.admission_year or 2026 }}"></label>
+    <label>Current semester <input type="number" name="current_semester" min="1" max="12" required value="{{ form.current_semester or 1 }}"></label>
+  </div>
+  <p class="muted">A login is created automatically: username = roll number, password = <code>learn123</code>.</p>
+  <div class="actions">
+    <button class="btn primary">Save student</button>
+    <a class="btn ghost" href="{{ url_for('admin_students') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

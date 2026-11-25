@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<div class="head">
+  <h1>Students <small class="muted">({{ students|length }})</small></h1>
+  <a class="btn primary" href="{{ url_for('admin_student_new') }}">+ Add student</a>
+</div>
+<form class="search" method="get">
+  <input name="q" value="{{ q }}" placeholder="Search by roll number, name or email">
+  <button class="btn">Search</button>
+  {% if q %}<a class="btn ghost" href="{{ url_for('admin_students') }}">Clear</a>{% endif %}
+</form>
+<div class="card flush">
+<table>
+  <tr><th>Roll no.</th><th>Name</th><th>Email</th><th>Program</th><th>Sem</th><th>Courses</th><th>Status</th></tr>
+  {% for s in students %}
+  <tr><td>{{ s.roll_number }}</td><td><a href="{{ url_for('admin_student_detail', sid=s.student_id) }}">{{ s.first_name }} {{ s.last_name }}</a></td><td>{{ s.email }}</td>
+      <td>{{ s.program_name }}</td><td>{{ s.current_semester }}</td><td>{{ s.courses }}</td>
+      <td><span class="pill {{ 'ok' if s.status == 'active' else 'warn' }}">{{ s.status }}</span></td></tr>
+  {% else %}<tr><td colspan="7" class="muted">No students found.</td></tr>{% endfor %}
+</table>
+</div>
+{% endblock %}
