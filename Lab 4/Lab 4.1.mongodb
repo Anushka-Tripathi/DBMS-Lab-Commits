@@ -1,0 +1,42 @@
+// LAB QUESTION 1: Collections
+// Create the four collections (mentioned in Problem Statement) in MongoDB.
+// For posts and comments, justify in one line each whether userId should be
+// embedded (storing user details directly inside the document) or referenced
+// (storing only the _id and looking it up separately), and implement the
+// chosen design consistently across all four collections.
+// Insert one sample document into each collection and display it with find()
+// to confirm the structure before proceeding.
+
+// File Upload Question
+
+
+// LAB QUESTION 2: Data Population
+// Insert at least 6 users, 10 posts (across different users), 15 comments
+// (across different posts) and 20 likes (across different posts/users),
+// ensuring enough variety to support later aggregation (e.g., at least one
+// user with multiple posts, at least one post with no comments).
+// Then perform: (a) find() with a filter (e.g., posts by one specific user),
+// (b) updateOne() to edit a post's content, (c) deleteOne() to remove one
+// comment, showing the collection state after each operation.
+
+// File Upload Question
+
+
+// LAB QUESTION 3: Aggregation pipelines
+// Write three aggregation pipelines using $match, $group and $sort: (a) total
+// likes per post, sorted descending, (b) total posts per user, (c) average
+// number of comments per post across the whole posts collection.
+// Use $lookup in at least one pipeline to join posts with users and display
+// the user's name alongside their post's like count.
+
+// File Upload Question
+
+
+// LAB QUESTION 4: Index
+// Create a single-field index on posts.userId and a compound index on
+// comments covering postId and createdAt.
+// Re-run one query from Q3 before and after creating the relevant index, and
+// compare the output of explain("executionStats") (documents examined,
+// execution time) for both runs.
+
+// File Upload Question

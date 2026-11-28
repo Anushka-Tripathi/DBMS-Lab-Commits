@@ -1,0 +1,34 @@
+// LAB QUESTION 5: Key-value store layout
+// Design a key-value store layout (e.g., for caching a user's session or feed)
+// that would sit alongside the Q1 document collections — specify the key
+// format and the value structure to be cached.
+// Explain, with one concrete example from this scenario, a situation where the
+// key-value layer is faster/more appropriate than querying the posts/comments
+// collections directly, and one situation where it is not sufficient on its
+// own.
+
+// File Upload Question
+
+
+// LAB QUESTION 6: Deployment
+// Describe how the (Q1-Q2) collections would be deployed on MongoDB Atlas:
+// specify the cluster tier, the shared key chosen for the posts collection if
+// it grew very large, and how many replica set members would be configured for
+// read availability.
+// Justify the shared key choice using the access pattern from Q3 (i.e., which
+// field is queried most often).
+
+// File Upload Question
+
+
+// LAB QUESTION 7: ETL
+// Design an ETL pipeline that periodically moves data from the Q1 posts and
+// likes collections into a separate analytics store. Specify: (a) what raw
+// data would land in a data lake stage versus what aggregated/structured data
+// would land in a data warehouse stage, (b) the transformation step applied
+// between the two (referencing the Q3 aggregation logic), and (c) one report
+// a business analyst could generate from the warehouse stage (e.g., daily
+// engagement trend). State, in one line, the distinction between a data lake
+// and a data warehouse as applied to this scenario.
+
+// File Upload Question
